@@ -6,12 +6,8 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 
-
-**/migrations/**
-!**/migrations
-!**/migrations/__init__.py
-
 .idea
+.python-version
 __pycache__/
 media/
 analytics/data
