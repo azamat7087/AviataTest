@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-^snt3-k79&3o8c$33^xs7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', True)
 
-ALLOWED_HOSTS = ["*", ]
+ALLOWED_HOSTS = ['*', ]
 
 
 # Application definition
@@ -103,7 +103,7 @@ DATABASES = {
         'NAME': os.environ.get('POSTGRES_DB', 'airflow'),
         'USER': os.environ.get('POSTGRES_USER', 'root'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'root'),
-        'HOST': 'localhost',
+        'HOST': 'connector_db',
         'PORT': '5432'
     }
 }
@@ -218,7 +218,7 @@ LOGGING = {
 
 
 # Redis_config
-REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
+REDIS_HOST = os.environ.get('REDIS_HOST', 'connector_redis')
 REDIS_PORT = os.environ.get('REDIS_PORT', 6379)
 
 
@@ -229,3 +229,5 @@ CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + str(REDIS_PORT) + '/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+LOCAL_IP = os.environ.get('LOCAL_IP', '10.0.85.1')

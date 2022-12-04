@@ -3,12 +3,13 @@ from django.apps import apps
 import requests
 import redis
 from utils.choices import StatusChoices
+from django.conf import settings
 
 providers_model = apps.get_model(app_label="connector", model_name="ProvidersData")
 
 
 def check_completed(providers_data, search_id):
-    redis_client = redis.Redis(host="localhost", port=6379, db=1)
+    redis_client = redis.Redis(host="connector_redis", port=6379, db=1)
 
     count = int(redis_client.get(f"count_{search_id}"))
 
@@ -39,13 +40,14 @@ def send_request_to_provider(provider_url, search_id):
 
 @app.task
 def send_requests_to_providers(search_id) -> None:
+    local_ip = settings.LOCAL_IP
 
     providers = [
-        "http://127.0.0.1:9001/search/",
-        "http://127.0.0.1:9002/search/",
+        f"http://{local_ip}:9001/search/",
+        f"http://{local_ip}:9002/search/",
     ]
 
-    redis_client = redis.Redis(host="localhost", port=6379, db=1)
+    redis_client = redis.Redis(host="connector_redis", port=6379, db=1)
     redis_client.set(name=f"count_{search_id}", value=len(providers) - 1)
 
     for provider in providers:

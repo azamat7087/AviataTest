@@ -1,0 +1,43 @@
+version: '3.10'
+services:
+
+  redis:
+    image: redis
+    container_name: connector_redis
+
+  database:
+    image: postgres
+    build:
+      context: .
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=airflow
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+    container_name: connector_db
+
+  app:
+    build: .
+    volumes:
+      - .:/airflow
+    ports:
+      - 9000:9000
+    image: app:airflow
+    container_name: airflow
+    command: python manage.py runserver 0.0.0.0:9000
+    depends_on:
+      - database
+
+  celery:
+    restart: always
+    build:
+      context: .
+    command: celery -A connector worker -l INFO
+    volumes:
+      - .:/airflow
+    container_name: connector_celery
+    depends_on:
+      - database
+      - redis
+      - app

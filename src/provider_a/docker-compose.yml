@@ -1,0 +1,12 @@
+version: '3.10'
+services:
+
+  app:
+    build: .
+    volumes:
+      - .:/provider_a
+    ports:
+      - 9001:9001
+    image: app:provider_a
+    container_name: provider_a
+    command: python manage.py runserver 0.0.0.0:9001
