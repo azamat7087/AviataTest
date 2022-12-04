@@ -1,4 +1,6 @@
 from django.apps import apps
+
+from connector.cron import update_exchange_rate
 from connector.tasks import send_requests_to_providers
 
 
@@ -18,9 +20,18 @@ def filter_providers_data(providers_data, currency) -> list:
     return data
 
 
+def get_exchange_rate():
+    exchange_rate = apps.get_model(app_label="connector", model_name="ExchangeRate")
+
+    if not exchange_rate.objects.count():
+        update_exchange_rate()
+
+    return exchange_rate.objects.first()
+
+
 def add_price(data, currency) -> list:
 
-    exchange_rate = apps.get_model(app_label="connector", model_name="ExchangeRate").objects.first()
+    exchange_rate = get_exchange_rate()
     exchange_kzt = 1
 
     for rate in exchange_rate.rates["rates"]["item"]:
