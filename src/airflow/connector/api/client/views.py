@@ -30,5 +30,4 @@ class ProvidersDataView(GenericViewSet):
         data = get_providers_data(providers_data, kwargs['currency'])
         result = serializer(providers_data, many=False).data
         result['items'] = data
-
         return Response(result, status=status.HTTP_200_OK)
