@@ -17,7 +17,8 @@ def check_completed(providers_data, search_id):
         redis_client.set(name=f"count_{search_id}", value=int(redis_client.get(f"count_{search_id}")) - 1)
     else:
         providers_data.status = StatusChoices.COMPLETED
-        redis_client.close()
+
+    redis_client.close()
 
     return providers_data
 
